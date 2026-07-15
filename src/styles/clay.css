@@ -1,0 +1,132 @@
+/* ISAS — Claymorphism + Glassmorphism + Spatial UI design layer */
+
+:root {
+  --clay-bg: #e9edf5;
+  --clay-bg-2: #dfe4ef;
+  --clay-surface: #eef2f9;
+  --clay-text: #3a3f52;
+  --clay-text-soft: #7b8194;
+
+  /* accents */
+  --accent-coral: #ff8a80;
+  --accent-amber: #ffcf86;
+  --accent-mint: #8ce0c0;
+  --accent-peri: #8fa6ff;   /* student / primary */
+  --accent-teal: #6fd6c4;   /* teacher */
+  --accent-violet: #b39ddb; /* admin */
+
+  /* role accent (overridden per role on body) */
+  --role: var(--accent-peri);
+  --role-soft: #eaf0ff;
+
+  --clay-shadow:
+    8px 8px 16px rgba(160, 170, 195, 0.55),
+    -8px -8px 16px rgba(255, 255, 255, 0.9);
+  --clay-shadow-sm:
+    4px 4px 9px rgba(160, 170, 195, 0.5),
+    -4px -4px 9px rgba(255, 255, 255, 0.9);
+  --clay-inset:
+    inset 5px 5px 10px rgba(160, 170, 195, 0.55),
+    inset -5px -5px 10px rgba(255, 255, 255, 0.9);
+  --clay-pressed:
+    inset 3px 3px 7px rgba(160, 170, 195, 0.6),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+
+  --glass-bg: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px rgba(70, 90, 140, 0.18);
+}
+
+.dark {
+  --clay-bg: #1c1e26;
+  --clay-bg-2: #16181f;
+  --clay-surface: #23262f;
+  --clay-text: #e6e8ef;
+  --clay-text-soft: #9aa0b0;
+
+  --role-soft: #262a3a;
+
+  --clay-shadow:
+    8px 8px 16px rgba(0, 0, 0, 0.55),
+    -8px -8px 16px rgba(58, 62, 76, 0.55);
+  --clay-shadow-sm:
+    4px 4px 9px rgba(0, 0, 0, 0.5),
+    -4px -4px 9px rgba(58, 62, 76, 0.5);
+  --clay-inset:
+    inset 5px 5px 10px rgba(0, 0, 0, 0.55),
+    inset -5px -5px 10px rgba(58, 62, 76, 0.5);
+  --clay-pressed:
+    inset 3px 3px 7px rgba(0, 0, 0, 0.6),
+    inset -3px -3px 7px rgba(58, 62, 76, 0.45);
+
+  --glass-bg: rgba(30, 32, 40, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* role tints */
+[data-role="student"] { --role: var(--accent-peri); --role-soft: #eaf0ff; }
+[data-role="teacher"] { --role: var(--accent-teal); --role-soft: #e3f8f4; }
+[data-role="admin"]   { --role: var(--accent-violet); --role-soft: #f0eafb; }
+.dark[data-role="student"] { --role-soft: #262a3a; }
+.dark[data-role="teacher"] { --role-soft: #1e2b2c; }
+.dark[data-role="admin"]   { --role-soft: #2a2536; }
+
+body {
+  font-family: 'Nunito', system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 800px at 15% -10%, rgba(143, 166, 255, 0.18), transparent 60%),
+    radial-gradient(1000px 700px at 110% 20%, rgba(140, 224, 192, 0.15), transparent 55%),
+    var(--clay-bg);
+  color: var(--clay-text);
+  transition: background 0.5s ease, color 0.4s ease;
+}
+
+.font-display { font-family: 'Fredoka', 'Nunito', sans-serif; }
+
+/* ---- clay surfaces ---- */
+.clay {
+  background: var(--clay-surface);
+  border-radius: 24px;
+  box-shadow: var(--clay-shadow);
+}
+.clay-sm {
+  background: var(--clay-surface);
+  border-radius: 18px;
+  box-shadow: var(--clay-shadow-sm);
+}
+.clay-inset {
+  background: var(--clay-bg);
+  border-radius: 18px;
+  box-shadow: var(--clay-inset);
+}
+
+/* ---- glass surfaces ---- */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  box-shadow: var(--glass-shadow);
+}
+
+.text-soft { color: var(--clay-text-soft); }
+.role-text { color: var(--role); }
+.role-bg { background: var(--role); }
+
+/* custom focus ring */
+.focus-clay:focus-visible {
+  outline: none;
+  box-shadow: var(--clay-shadow-sm), 0 0 0 3px color-mix(in srgb, var(--role) 55%, transparent);
+}
+
+/* scrollbar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-6px); opacity: 1; }
+}
+.typing-dot { animation: dotBounce 1.2s infinite ease-in-out; }
