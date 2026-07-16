@@ -80,7 +80,7 @@ export const useApp = () => {
   return c;
 };
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://isas-veex.onrender.com/api";
 
 const getHeaders = () => ({
   "Content-Type": "application/json",
