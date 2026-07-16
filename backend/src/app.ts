@@ -13,6 +13,10 @@ app.use(cors({ origin: config.cors.origin, credentials: true }));
 app.use(express.json());
 app.use(morgan("dev"));
 
+app.get("/", (req, res) => {
+  res.send("🚀 ISAS API is running!");
+});
+
 app.use("/api", routes);
 
 app.use(errorHandler);
