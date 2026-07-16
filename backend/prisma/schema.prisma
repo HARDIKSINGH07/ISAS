@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  student
+  teacher
+  admin
+}
+
+enum AttendanceStatus {
+  Present
+  Absent
+  Late
+}
+
+enum EventCategory {
+  Workshop
+  Hackathon
+  Seminar
+}
+
+model User {
+  userID          String       @id
+  name            String
+  email           String       @unique
+  passwordHash    String
+  role            Role
+  enrolledSubjects String[]    @default([])
+  subjectsTaught  String[]     @default([])
+  section         String?
+  
+  isDeleted       Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  attendances     Attendance[] @relation("StudentAttendances")
+  assignments     Assignment[] @relation("CreatorAssignments")
+  events          Event[]      @relation("AdminEvents")
+  rsvps           RSVP[]
+
+  @@map("users")
+}
+
+model Attendance {
+  attendanceID    String       @id
+  studentID       String
+  subject         String
+  date            String       // Kept as string to match frontend format (ISO)
+  status          AttendanceStatus
+  markedBy        String
+  
+  isDeleted       Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  student         User         @relation("StudentAttendances", fields: [studentID], references: [userID], onDelete: Cascade)
+
+  @@map("attendance")
+}
+
+model Assignment {
+  assignmentID    String       @id
+  title           String
+  subject         String
+  description     String
+  deadline        String
+  completed       Boolean      @default(false)
+  createdBy       String
+  
+  isDeleted       Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  creator         User         @relation("CreatorAssignments", fields: [createdBy], references: [userID], onDelete: Cascade)
+  checklist       ChecklistItem[]
+
+  @@map("assignments")
+}
+
+model ChecklistItem {
+  itemID          String       @id
+  label           String
+  done            Boolean      @default(false)
+  assignmentID    String
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  assignment      Assignment   @relation(fields: [assignmentID], references: [assignmentID], onDelete: Cascade)
+
+  @@map("checklist_items")
+}
+
+model Event {
+  eventID         String       @id
+  title           String
+  dateTime        String
+  venue           String
+  category        EventCategory
+  description     String
+  createdByAdminID String
+  published       Boolean      @default(true)
+  
+  isDeleted       Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  creator         User         @relation("AdminEvents", fields: [createdByAdminID], references: [userID], onDelete: Cascade)
+  rsvps           RSVP[]
+
+  @@map("events")
+}
+
+model RSVP {
+  userID          String
+  eventID         String
+  bookmarked      Boolean      @default(false)
+  attending       Boolean      @default(false)
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  user            User         @relation(fields: [userID], references: [userID], onDelete: Cascade)
+  event           Event        @relation(fields: [eventID], references: [eventID], onDelete: Cascade)
+
+  @@id([userID, eventID])
+  @@map("rsvps")
+}
