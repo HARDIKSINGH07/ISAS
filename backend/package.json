@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
+    "build": "tsup src/server.ts --format esm --clean --out-dir dist",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
     "db:migrate": "prisma migrate dev"
@@ -38,6 +38,7 @@
     "@types/pg": "^8.20.0",
     "@types/uuid": "^10.0.0",
     "prisma": "^6.19.3",
+    "tsup": "^8.5.1",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
